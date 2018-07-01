@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title_page %}
+    Дефект ID: {{ defect.id}}
+{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ url_for('defects.index') }}">Дефекты</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Дефект ID: {{ defect.id }}</li>
+  </ol>
+</nav>
+<div class="card">
+    {{ defect.equipments.name }}
+      <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted"><img width="18" src=" {{ url_for('static', filename='img/if_calendar-book-date-monthly_2203551.png') }}"> {{ defect.created.strftime('%d.%m.%Y в %H:%M') }}</h6>
+          <p>{{ defect.description}}</p>
+          <p><img width="18" src="{{ url_for('static', filename='img/if_user-avatar-human-admin-login_2203549.png') }}"> <strong>{{ defect.author.surname}} {{ defect.author.name}} {{ defect.author.middle_name}}</strong></p>
+      </div>
+</div>
+<hr/>
+{% if defect.taken_user_id == 1 %}
+<button type="button" class="btn btn-outline-primary">Принять дефект</button>
+{% endif %}
+<hr/>
+{% if defect.taken_user_id == current_user.id %}
+    {% if defect.eliminated == 0 %}
+        <form method="post"">
+            <input type="hidden" name="defect_id" id="defect_id" value="{{ defect.id }}">
+          <div class="form-group">
+            <textarea class="form-control" id="eliminated_description" name="eliminated_description" rows="4"></textarea>
+          </div>
+          <button type="button" id="defect_writing" class="btn btn-success mb-2">Отписать этот дефект</button>
+        </form>
+    {% endif %}
+{% endif %}
+
+{% endblock %}

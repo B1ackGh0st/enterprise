@@ -1,0 +1,59 @@
+<div class="table-defects">
+          <div class="table-responsive">
+                <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                    <th>Описание</th>
+                  <th>Оборудование</th>
+                  <th>Создан</th>
+                </tr>
+              </thead>
+<tbody>
+              {% for defect in pages.items %}
+                <tr {% if defect.taken_user_id == 1 %}
+                    class="table-light"
+                    {% else %}
+                    class="table-primary"
+                    {% endif %}>
+                  <td>{{ defect.id }}</td>
+                    <td>
+                        <a href="{{ url_for('defects.defect_detail', id=defect.id) }}">
+                            {{ shorten_line(defect.description) }} ...</a>
+                    </td>
+                  <td>{{ defect.equipments.name }}</td>
+                  <td>{{ defect.created.strftime('%d.%m.%Y в %H:%M') }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+<nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li
+            {% if not pages.has_prev %}
+                class="desabled"
+            {% endif %}
+            class="page-item">
+            <a class="page-link" href="./?page={{ pages.prev_num }}">Сюда</a>
+        </li>
+
+        {% for page in pages.iter_pages() %}
+        <li class="
+           {% if pages == pages.page %}
+                active
+           {% endif %}
+           page-item">
+           <a class="page-link" href="./?page={{ page }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        <li {% if pages.has_next %}
+                class="desabled"
+            {% endif %}
+            class="page-item">
+            <a class="page-link" href="./?page={{ pages.next_num }}">Туда</a>
+        </li>
+      </ul>
+    </nav>
+    </div>
