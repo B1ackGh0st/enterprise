@@ -1,5 +1,5 @@
 .container  {
-margin-top: 200px;
+//margin-top: 200px;
 }
 
 .form-signin {
@@ -11,4 +11,8 @@ margin-top: 200px;
 
 .content  {
 margin-top:50px;
+}
+
+.nav-link a:hover, .nav-link a {
+color: #fff;
 }

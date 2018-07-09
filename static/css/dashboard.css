@@ -18,8 +18,9 @@ body {
   bottom: 0;
   left: 0;
   z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
+  padding: 10px 0 0; /* Height of navbar */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  background: #01579B;
 }
 
 .sidebar-sticky {
@@ -28,13 +29,6 @@ body {
   height: calc(100vh - 48px);
   padding-top: .5rem;
   overflow-x: hidden;
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,45484d+100 */
-background: #000000; /* Old browsers */
-background: -moz-linear-gradient(-45deg, #000000 0%, #45484d 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(-45deg, #000000 0%,#45484d 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(135deg, #000000 0%,#45484d 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#45484d',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
@@ -52,12 +46,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 
 .sidebar .nav-link .feather {
   margin-right: 4px;
-  color: #fff;
+  color: #999;
 }
 
 .sidebar .nav-link.active {
-  color: rgba(120,180,250, 1);
-  font-weight: bold
+  color: #007bff;
 }
 
 .sidebar .nav-link:hover .feather,
@@ -75,7 +68,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
  */
 
 [role="main"] {
-  padding-top: 48px; /* Space for fixed navbar */
+  //padding-top: 48px; /* Space for fixed navbar */
 }
 
 /*
@@ -106,6 +99,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
+
 
 /*
  * Utilities

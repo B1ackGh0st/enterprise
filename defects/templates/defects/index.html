@@ -4,40 +4,37 @@
     Дефекты
 {% endblock %}
 {% block content %}
-
-
-Всего дефектов {{ defect_count }} <br/>
-Принятых дефектов {{ defect_accept }} <br/>
-Не принятых дефектов {{ defect_accept }} <br/>
-Отписанных дефектов {{ defect_accept }} <br/>
-
 <div class="btn-group" role="group">
-    <button type="button" class="btn btn-warning defect_type" id="all">Все</button>
-    <button type="button" class="btn btn-secondary defect_type" id="not_adopted">Не принятые</button>
-    <button type="button" class="btn btn-primary defect_type" id="adopted">Принятые</button>
-    <button type="button" class="btn btn-success defect_type" id="eliminated">Отписанные</button>
+    <button type="button" class="btn btn-warning btn-sm defect_type" id="all">Все <span class="badge badge-light">{{ defect_count }}</span></button>
+    <button type="button" class="btn btn-secondary btn-sm defect_type" id="not_adopted">Не принятые <span class="badge badge-light">{{ defect_not_accept }}</span></button>
+    <button type="button" class="btn btn-primary btn-sm defect_type" id="adopted">Принятые <span class="badge badge-light">{{ defect_accept }}</span></button>
+    <button type="button" class="btn btn-success btn-sm defect_type" id="eliminated">Отписанные <span class="badge badge-light">{{ defect_writing }}</span></button>
 </div>
-<hr/>
 <div class="table-defects">
-
           <div class="table-responsive">
                 <table class="table table-striped table-sm">
               <thead>
                 <tr>
-                  <th>ID</th>
+                    <th>ID</th>
+                    <th></th>
                     <th>Описание</th>
-                  <th>Оборудование</th>
-                  <th>Создан</th>
+                    <th>Оборудование</th>
+                    <th>Создан</th>
                 </tr>
               </thead>
 <tbody>
               {% for defect in pages.items %}
-                <tr {% if defect.taken_user_id == 1 %}
+                <tr {% if defect.taken_user_id == None %}
                     class="table-light"
-                    {% else %}
+                    {% endif %}
+                    {% if defect.taken_user_id != None and defect.eliminated == 0 %}
                     class="table-primary"
-                    {% endif %}>
-                  <td>{{ defect.id }}</td>
+                    {% endif %}
+                    {% if defect.taken_user_id != None and defect.eliminated == 1 %}
+                    class="table-success"
+                    {% endif %}
+                  ><td>{{ defect.id }}</td>
+                    <td>{% if defect.urgently == True %}<img title="Срочный дефект" alt="Срочный дефект" src="{{ url_for('static', filename='img/fire.png') }}">{%endif%}</td>
                     <td>
                         <a href="{{ url_for('defects.defect_detail', id=defect.id) }}">
                             {{ shorten_line(defect.description) }} ...</a>

@@ -1,9 +1,17 @@
 {% extends 'base.html' %}
 
 {% block title_page %}
-    Index
+Панель управления
 {% endblock %}
 
 {% block content %}
-    INDEX
+<h3>Количество дефектов по месяцам</h3>
+<div class="chart-container" style="position: relative; height:40vh; width:80vw">
+    <canvas id="myChart"></canvas>
+</div>
+
+                      {{ defect_count }}
+                           {{ defect_accept }}
+                           {{ defect_not_accept }}
+                           {{ defect_writing }}
 {% endblock %}

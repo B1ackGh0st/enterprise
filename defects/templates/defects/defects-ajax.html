@@ -4,19 +4,25 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                    <th>Описание</th>
+                  <th></th>
+                  <th>Описание</th>
                   <th>Оборудование</th>
                   <th>Создан</th>
                 </tr>
               </thead>
 <tbody>
               {% for defect in pages.items %}
-                <tr {% if defect.taken_user_id == 1 %}
+                <tr {% if defect.taken_user_id == None %}
                     class="table-light"
-                    {% else %}
+                    {% endif %}
+                    {% if defect.taken_user_id != None and defect.eliminated == 0 %}
                     class="table-primary"
-                    {% endif %}>
-                  <td>{{ defect.id }}</td>
+                    {% endif %}
+                    {% if defect.taken_user_id != None and defect.eliminated == 1 %}
+                    class="table-success"
+                    {% endif %}
+                  ><td>{{ defect.id }}</td>
+                    <td>{% if defect.urgently == True %}<img title="Срочный дефект" alt="Срочный дефект" src="{{ url_for('static', filename='img/fire.png') }}">{%endif%}</td>
                     <td>
                         <a href="{{ url_for('defects.defect_detail', id=defect.id) }}">
                             {{ shorten_line(defect.description) }} ...</a>

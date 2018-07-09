@@ -42,11 +42,13 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(64), index=True)
     middle_name = db.Column(db.String(64), index=True)
     password_hash = db.Column(db.String(128))
-    role = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy=True), lazy=True)
+    roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy=True), lazy=True)
     defect = db.relationship('Defect', backref=db.backref('author', lazy=True), lazy=True,
                                    foreign_keys="Defect.author_id")
     defect_taken = db.relationship('Defect', backref=db.backref('defect_taken', lazy=True), lazy=True,
                                    foreign_keys="Defect.taken_user_id")
+    confirmed_at = db.Column(db.DateTime())
+    active = db.Column(db.Boolean, default=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -57,7 +59,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
-    def has_roles(self, *args):
+    def has_role(self, *args):
         return set(args).issubset({role.name for role in self.roles})
 
 
@@ -70,12 +72,15 @@ class Equipment(db.Model):
 class Defect(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     equipment = db.Column(db.Integer, db.ForeignKey('equipment.id'))
+    urgently = db.Column(db.Boolean, default=False)
     description = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    taken_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, default=1)
+    taken_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    taken_date = db.Column(db.DateTime)  # Дата принятия
     created = db.Column(db.DateTime, default=datetime.now())  # Дата создания
-    eliminated = db.Column(db.Integer, nullable=False, default=0)
-    eliminated_description = db.Column(db.Text)
+    eliminated = db.Column(db.Integer, nullable=True, default=0)
+    eliminated_date = db.Column(db.DateTime, nullable=True)  # Дата отписания
+    eliminated_description = db.Column(db.Text, nullable=True)
 
     def __init__(self, *args, **kwargs):
         super(Defect, self).__init__(*args, **kwargs)
@@ -85,6 +90,8 @@ class Defect(UserMixin, db.Model):
         if self.id:
             self.slug = slugify(self.id)
 
+
+
     def __repr__(self):
         return '<Post id: {}, title: {}>'.format(self.id, self.title)
 
@@ -93,3 +100,5 @@ def equipment_query(columns=None):
 
 def load_query(id):
     return Equipment.query.get(int(id))
+
+

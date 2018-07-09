@@ -16,20 +16,19 @@ $(document).on("click", ".accept-defect", function(e) {
 
 // Отпись дефекта
 $(document).on("click", "#defect_writing", function(e) {
-
     var id = $("#defect_id").val();
     var eliminated_description = $("#eliminated_description").val();
 
     $.ajax({
-        url:  "defect_writing", //url
+        url:  "/defect_writing", //url
         type: "POST", //метод отправки
-        data: "defect_id=" + id + "eliminated_description=" + eliminated_description, // Сеарилизуем объект
+        data: { defect_id: id, eliminated_description:eliminated_description },
         success: function(response) { //Данные отправлены успешно
-            //$('.table-defects').html(response);
         }
     });
 
 });
+
 
 // Виды дефектов (непринятые, принятые и т.д.)
 $(document).on("click", ".defect_type", function(e) {

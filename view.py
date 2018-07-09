@@ -18,7 +18,43 @@ db.session.commit()
 @app.route('/index')
 #@login_required
 def index():
-    return render_template('base.html', title='Home Page')
+    defect_count = Defect.query.count()
+    defect_accept = Defect.query.filter(Defect.taken_user_id != 0).count()
+    defect_not_accept = Defect.query.filter(Defect.taken_user_id == None).count()
+    defect_writing = Defect.query.filter(Defect.eliminated != 0).count()
+
+    January = Defect.query.filter(func.extract('month', Defect.created) == 1).count()
+    February = Defect.query.filter(func.extract('month', Defect.created) == 2).count()
+    March = Defect.query.filter(func.extract('month', Defect.created) == 3).count()
+    April = Defect.query.filter(func.extract('month', Defect.created) == 4).count()
+    May = Defect.query.filter(func.extract('month', Defect.created) == 5).count()
+    June = Defect.query.filter(func.extract('month', Defect.created) == 6).count()
+    July = Defect.query.filter(func.extract('month', Defect.created) == 7).count()
+    August = Defect.query.filter(func.extract('month', Defect.created) == 8).count()
+    September = Defect.query.filter(func.extract('month', Defect.created) == 9).count()
+    October = Defect.query.filter(func.extract('month', Defect.created) == 10).count()
+    November = Defect.query.filter(func.extract('month', Defect.created) == 11).count()
+    December = Defect.query.filter(func.extract('month', Defect.created) == 12).count()
+
+    return render_template('index.html',
+                           title='Home Page',
+                           defect_count=defect_count,
+                           defect_accept=defect_accept,
+                           defect_not_accept=defect_not_accept,
+                           defect_writing=defect_writing,
+                           January=January,
+                           February=February,
+                           March=March,
+                           April=April,
+                           May=May,
+                           June=June,
+                           July=July,
+                           August=August,
+                           September=September,
+                           October=October,
+                           November=November,
+                           December=December
+                           )
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -44,6 +80,7 @@ def logout():
     return redirect(url_for('index'))
 
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -60,7 +97,6 @@ def register():
         #flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
-
 
 @app.route('/user/<username>')
 @login_required

@@ -16,57 +16,58 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Панель</a>
-      <input class="form-control form-control-dark w-100" type="text" placeholder="Поиск" aria-label="Search">
-      <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
-        </li>
-      </ul>
-    </nav>
 
     <div class="container-fluid">
       <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <nav class="col-md-2 d-none d-md-block sidebar">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('index') }}">
+                <a class="nav-link" href="{{ url_for('index') }}">
                   <span data-feather="home"></span>
-                  Главная <span class="sr-only">(current)</span>
+                  <img src="{{ url_for('static', filename='img/home.png') }}"> Главная
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('defects.index') }}">
                   <span data-feather="file"></span>
-                  Дефекты
+                  <img src="{{ url_for('static', filename='img/maintenance.png') }}"> Дефекты
                 </a>
               </li>
               {% if current_user.is_anonymous %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('login') }}">
                   <span data-feather="layers"></span>
-                  Войти
+                  <img src="{{ url_for('static', filename='img/login.png') }}"> Войти
                 </a>
               </li>
               {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">
                   <span data-feather="layers"></span>
-                  Профиль
+                  <img src="{{ url_for('static', filename='img/user_24.png') }}"> Профиль
                 </a>
               </li>
+              {% if current_user.has_role('NSS') or current_user.has_role('NSM') %}}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('defects.create_defect') }}">
                   <span data-feather="layers"></span>
-                  Создать дефект
+                  <img src="{{ url_for('static', filename='img/contract.png') }}"> Создать дефект
                 </a>
               </li>
+              {% endif %}
+              {% if current_user.has_role('Administrator') %}}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.index') }}">
+                  <span data-feather="layers"></span>
+                  <img src="{{ url_for('static', filename='img/logout.png') }}"> Панель администратора
+                </a>
+              </li>
+              {% endif %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('logout') }}">
                   <span data-feather="layers"></span>
-                  Выйти
+                  <img src="{{ url_for('static', filename='img/logout.png') }}"> Выйти
                 </a>
               </li>
               {% endif %}
@@ -98,5 +99,52 @@
     <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+
+<script>
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь",
+        "Ноябрь", "Декабрь"],
+        datasets: [{
+            label: '# of Votes',
+            data: [
+              {{ January }},
+              {{ February }},
+              {{ March }},
+              {{ April }},
+              {{ May }},
+              {{ June }},
+              {{ July }},
+              {{ August }},
+              {{ September }},
+              {{ October }},
+              {{ November }},
+              {{ December }},
+            ],
+            backgroundColor: [
+                'rgba(34, 139, 6, 0.8)',
+            ],
+            borderColor: [
+
+                'rgba(19, 83, 2, 1)'
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script>
   </body>
 </html>

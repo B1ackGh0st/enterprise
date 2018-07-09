@@ -13,14 +13,20 @@
 <div class="card">
     {{ defect.equipments.name }}
       <div class="card-body">
-          <h6 class="card-subtitle mb-2 text-muted"><img width="18" src=" {{ url_for('static', filename='img/if_calendar-book-date-monthly_2203551.png') }}"> {{ defect.created.strftime('%d.%m.%Y в %H:%M') }}</h6>
+          <span class="card-subtitle mb-2 text-muted"><img width="18" src=" {{ url_for('static', filename='img/if_calendar-book-date-monthly_2203551.png') }}"> {{ defect.created.strftime('%d.%m.%Y в %H:%M') }}</span>
           <p>{{ defect.description}}</p>
           <p><img width="18" src="{{ url_for('static', filename='img/if_user-avatar-human-admin-login_2203549.png') }}"> <strong>{{ defect.author.surname}} {{ defect.author.name}} {{ defect.author.middle_name}}</strong></p>
       </div>
 </div>
 <hr/>
-{% if defect.taken_user_id == 1 %}
-<button type="button" class="btn btn-outline-primary">Принять дефект</button>
+{% if defect.taken_user_id == None %}
+    <button type="button" class="btn btn-outline-primary accept-defect" id="{{ defect.id }}">Принять дефект</button>
+{% else %}
+<div class="alert alert-success" role="alert">
+  <h4 class="alert-heading">Дефект принят</h4>
+    <p><strong>Время: </strong>{{ defect.taken_date.strftime('%d.%m.%Y в %H:%M') }}</p>
+    <p><strong>Принял: </strong>{{ load_user_id(defect.taken_user_id).surname }} {{ load_user_id(defect.taken_user_id).name }} {{ load_user_id(defect.taken_user_id).middle_name }}</p>
+</div>
 {% endif %}
 <hr/>
 {% if defect.taken_user_id == current_user.id %}
@@ -34,5 +40,15 @@
         </form>
     {% endif %}
 {% endif %}
+{% if defect.eliminated != 0 %}
+    <div class="alert alert-primary" role="alert">
+      <h4 class="alert-heading">Дефект отписан</h4>
+      <p><strong>{{ defect.eliminated_date.strftime('%d.%m.%Y в %H:%M') }}</strong></p>
+      <p><strong>Отписал: </strong>{{ load_user_id(defect.taken_user_id).surname }} {{ load_user_id(defect.taken_user_id).name }} {{ load_user_id(defect.taken_user_id).middle_name }}</p>
+      <hr>
+      <p class="mb-0">{{ defect.eliminated_description }}</p>
+    </div>
+{% endif %}
+
 
 {% endblock %}
