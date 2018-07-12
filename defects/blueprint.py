@@ -79,6 +79,7 @@ def index():
     defect_not_accept = Defect.query.filter(Defect.taken_user_id == None).count()
     defect_writing = Defect.query.filter(Defect.eliminated != 0).count()
 
+    title_page= 'Дефекты'
 
     # Выводим шаблон
     return render_template('defects/index.html',
@@ -88,34 +89,34 @@ def index():
                            defect_accept=defect_accept,
                            defect_not_accept=defect_not_accept,
                            defect_writing=defect_writing,
+                           title_page=title_page
                            )
 
 
 # http://localhost/defects/
-@defects.route('/defect_type', methods=['GET', 'POST'])
-def defect_type():
-    defect_type = request.form['defect_type'];
-
+@defects.route('/defect_type/<defect_type>', methods=['GET'])
+def defect_type(defect_type):
     page = request.args.get('page')
     if page and page.isdigit(): # Если переменная имеет значение и переменная является цифрой
         page = int(page) # Преобразуем переменную в цифру
     else: # Иначе ...
         page = 1 # Даем значение переменной
 
-    # пагинация
-    #defect_type = request.args.get('defect_type')
-
     if defect_type == 'all':
         defects = Defect.query.order_by(Defect.created.desc())
+        title_page = 'Дефекты'
 
     elif defect_type == 'adopted':
         defects = Defect.query.filter(Defect.taken_user_id != 0).order_by(Defect.created.desc())
+        title_page = 'Принятые'
 
     elif defect_type == 'not_adopted':
         defects = Defect.query.filter(Defect.taken_user_id == None).order_by(Defect.created.desc())
+        title_page = 'Не принятые'
 
     elif defect_type == 'eliminated':
         defects = Defect.query.filter(Defect.eliminated == 1).order_by(Defect.created.desc())
+        title_page = 'Отписанные'
 
     # Колличество выводимых записей
 
@@ -123,7 +124,7 @@ def defect_type():
     pages = defects.paginate(page=page, per_page=page_num)
 
     # Выводим шаблон
-    return render_template('defects/defects-ajax.html', defects=defects, pages=pages)
+    return render_template('defects/index.html', defects=defects, pages=pages, title_page=title_page)
 
 
 
@@ -131,7 +132,17 @@ def defect_type():
 @defects.route('/<id>')
 def defect_detail(id):
     defect = Defect.query.filter(Defect.id == id).first_or_404()
+
+    update_loock = defect.loock + 1
+
+    Defect.query.filter_by(id=id).update({'loock': update_loock})
+    db.session.commit()
+
+    defect.loock_usr_dfct.append(current_user)
+    db.session.commit()
+
     return render_template('defects/defect_detail.html', defect=defect)
+
 
 
 # AJAX

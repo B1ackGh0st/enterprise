@@ -9,74 +9,73 @@
 
     <title>{% block title_page %}{% endblock %}</title>
 
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
   </head>
 
   <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ url_for('index') }}"><img width="14px"  src="{{ url_for('static', filename='img/home.png') }}"> Главная <span class="sr-only">(current)</span></a>
+          </li>
 
-    <div class="container-fluid">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img width="14px" src="{{ url_for('static', filename='img/maintenance.png') }}"> Дефекты</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="{{ url_for('defects.index') }}">Все</a>
+              <a class="dropdown-item" href="/defects/defect_type/adopted">Принятые</a>
+              <a class="dropdown-item" href="/defects/defect_type/not_adopted">Не принятые</a>
+              <a class="dropdown-item" href="/defects/defect_type/eliminated">Отписанные</a>
+            </div>
+          </li>
+          {% if current_user.is_anonymous %}
+          <li class="nav-item">
+            <a class="nav-link" id="login" href="{{ url_for('login') }}">
+              <span data-feather="layers"></span>
+              <img width="14px" src="{{ url_for('static', filename='img/login.png') }}"> Войти
+            </a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" id="user" href="{{ url_for('user', username=current_user.username) }}">
+              <span data-feather="layers"></span>
+              <img width="14px" src="{{ url_for('static', filename='img/user_24.png') }}"> Профиль
+            </a>
+          </li>
+          {% if current_user.has_role('NSS') or current_user.has_role('NSM') %}}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('defects.create_defect') }}">
+              <span data-feather="layers"></span>
+              <img width="14px" src="{{ url_for('static', filename='img/contract.png') }}"> Создать дефект
+            </a>
+          </li>
+          {% endif %}
+          {% if current_user.has_role('Administrator') %}}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin.index') }}">
+              <span data-feather="layers"></span>
+              <img width="14px" src="{{ url_for('static', filename='img/logout.png') }}"> Панель администратора
+            </a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">
+              <span data-feather="layers"></span>
+              <img width="14px" src="{{ url_for('static', filename='img/logout.png') }}"> Выйти
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
       <div class="row">
-        <nav class="col-md-2 d-none d-md-block sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('index') }}">
-                  <span data-feather="home"></span>
-                  <img src="{{ url_for('static', filename='img/home.png') }}"> Главная
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('defects.index') }}">
-                  <span data-feather="file"></span>
-                  <img src="{{ url_for('static', filename='img/maintenance.png') }}"> Дефекты
-                </a>
-              </li>
-              {% if current_user.is_anonymous %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('login') }}">
-                  <span data-feather="layers"></span>
-                  <img src="{{ url_for('static', filename='img/login.png') }}"> Войти
-                </a>
-              </li>
-              {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">
-                  <span data-feather="layers"></span>
-                  <img src="{{ url_for('static', filename='img/user_24.png') }}"> Профиль
-                </a>
-              </li>
-              {% if current_user.has_role('NSS') or current_user.has_role('NSM') %}}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('defects.create_defect') }}">
-                  <span data-feather="layers"></span>
-                  <img src="{{ url_for('static', filename='img/contract.png') }}"> Создать дефект
-                </a>
-              </li>
-              {% endif %}
-              {% if current_user.has_role('Administrator') %}}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('admin.index') }}">
-                  <span data-feather="layers"></span>
-                  <img src="{{ url_for('static', filename='img/logout.png') }}"> Панель администратора
-                </a>
-              </li>
-              {% endif %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('logout') }}">
-                  <span data-feather="layers"></span>
-                  <img src="{{ url_for('static', filename='img/logout.png') }}"> Выйти
-                </a>
-              </li>
-              {% endif %}
-            </ul>
-
-          </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <main role="main" class="col-md-11 ml-sm-auto col-lg-12 px-4">
           <div class="content">
             {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -97,11 +96,16 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
 
 <script>
+$(document).ready(function () {
+    $("#{{request.endpoint}}").addClass("active");
+})
+
+
 var ctx = document.getElementById("myChart");
 var myChart = new Chart(ctx, {
     type: 'line',
@@ -145,6 +149,7 @@ var myChart = new Chart(ctx, {
         }
     }
 });
+
 </script>
   </body>
 </html>

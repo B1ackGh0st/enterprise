@@ -12,11 +12,50 @@
 </nav>
 <div class="card">
     {{ defect.equipments.name }}
-      <div class="card-body">
-          <span class="card-subtitle mb-2 text-muted"><img width="18" src=" {{ url_for('static', filename='img/if_calendar-book-date-monthly_2203551.png') }}"> {{ defect.created.strftime('%d.%m.%Y в %H:%M') }}</span>
+      <ul class="list-inline">
+          <li><span class="card-subtitle mb-2 text-muted"><img width="18" src=" {{ url_for('static', filename='img/if_calendar-book-date-monthly_2203551.png') }}"> Создан: {{ defect.created.strftime('%d.%m.%Y в %H:%M') }}</span></li>
+          <li><img width="18" src="{{ url_for('static', filename='img/if_user-avatar-human-admin-login_2203549.png') }}"> <strong>{{ defect.author.surname}} {{ defect.author.name}} {{ defect.author.middle_name}}</strong></li>
+          </ul>
           <p>{{ defect.description}}</p>
-          <p><img width="18" src="{{ url_for('static', filename='img/if_user-avatar-human-admin-login_2203549.png') }}"> <strong>{{ defect.author.surname}} {{ defect.author.name}} {{ defect.author.middle_name}}</strong></p>
       </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#look_user_list">
+  Просмотров [ {{ defect.loock}} ]
+</button>
+<div class="modal fade" id="look_user_list" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="">Журнал просмотров дефекта</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Ф.И.О</th>
+              <th scope="col">Дата</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in defect.loock_usr_dfct %}
+            <tr>
+              <td>{{ user.id }}</td>
+              <td>{{ user.surname }} {{ user.name }} {{ user.middle_name }}</td>
+              <td>{{ defect.loock_usr_dfct.loosk_time }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
 </div>
 <hr/>
 {% if defect.taken_user_id == None %}

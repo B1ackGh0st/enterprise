@@ -10,7 +10,7 @@
     <form action="{{ url_for('defects.create_defect') }}" method="POST">
         <div class="form-group">
             <label>Оборудование</label>
-            {{ form.equipment(class="form-control form-control-sm") }}
+            {{ form.equipment(class="custom-select d-block w-100 form-control form-control-sm") }}
         </div>
         <div class="form-group">
             <label>Описание</label>
@@ -18,7 +18,7 @@
         </div>
         <div class="form-group">
             <label for="urgently">Срочный</label>
-            <select class="form-control form-control-sm" name="urgently" id="urgently">
+            <select class="custom-select d-block w-20 form-control form-control-sm" name="urgently" id="urgently">
                 <option value="False">Нет</option>
                 <option value="True">Да</option>
             </select>
